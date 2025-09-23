@@ -12,6 +12,7 @@ type FormData = z.infer<typeof Schema>
 export function ContactForm() {
   const [status, setStatus] = useState<'idle'|'sending'|'sent'|'error'>('idle')
   const [error, setError] = useState<string | null>(null)
+  const API_BASE = (import.meta as any).env?.VITE_API_BASE || ''
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -27,7 +28,7 @@ export function ContactForm() {
     setStatus('sending')
     setError(null)
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${API_BASE}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(parsed.data)
