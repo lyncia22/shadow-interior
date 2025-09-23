@@ -69,7 +69,7 @@ export function Services() {
             <div className="pc-head">
               <span className="badge">Starter</span>
               <h3>Room Refresh</h3>
-              <p className="price">From R3,500</p>
+              <p className="price">From $200</p>
             </div>
             <ul>
               <li>1 moodboard + shopping list</li>
@@ -82,7 +82,7 @@ export function Services() {
             <div className="pc-head">
               <span className="badge">Popular</span>
               <h3>Full Room Design</h3>
-              <p className="price">From R9,900</p>
+              <p className="price">From $500</p>
             </div>
             <ul>
               <li>Layout plan + 3D concept</li>
