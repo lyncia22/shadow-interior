@@ -13,6 +13,7 @@ export function ContactForm() {
   const [status, setStatus] = useState<'idle'|'sending'|'sent'|'error'>('idle')
   const [error, setError] = useState<string | null>(null)
   const API_BASE = (import.meta as any).env?.VITE_API_BASE || ''
+  const FORMS_ENDPOINT = (import.meta as any).env?.VITE_FORMS_ENDPOINT as string | undefined
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -28,11 +29,22 @@ export function ContactForm() {
     setStatus('sending')
     setError(null)
     try {
-      const res = await fetch(`${API_BASE}/api/contact`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(parsed.data)
-      })
+      let res: Response
+      if (FORMS_ENDPOINT) {
+        // No-backend mode: send as FormData to the external forms service
+        const fd = new FormData()
+        fd.append('name', parsed.data.name)
+        fd.append('email', parsed.data.email)
+        fd.append('message', parsed.data.message)
+        res = await fetch(FORMS_ENDPOINT, { method: 'POST', body: fd })
+      } else {
+        // Backend mode (local dev proxy or deployed API)
+        res = await fetch(`${API_BASE}/api/contact`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(parsed.data)
+        })
+      }
       if (!res.ok) throw new Error('Request failed')
       setStatus('sent')
       ;(e.currentTarget as HTMLFormElement).reset()
